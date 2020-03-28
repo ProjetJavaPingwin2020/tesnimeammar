@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="projetpidev.FXMLAfficherFormationController">
+   <children>
+      <TableView fx:id="table" layoutX="14.0" layoutY="73.0" onMouseClicked="#display" prefHeight="251.0" prefWidth="835.0" />
+      <ImageView fx:id="image" fitHeight="150.0" fitWidth="200.0" layoutX="289.0" layoutY="371.0" pickOnBounds="true" preserveRatio="true" />
+      <TextField fx:id="nom" layoutX="111.0" layoutY="371.0" opacity="0.0" />
+      <TextField fx:id="type" layoutX="283.0" layoutY="371.0" opacity="0.0" />
+      <TextField fx:id="date" layoutX="460.0" layoutY="359.0" opacity="0.0" />
+      <TextField fx:id="lieu" layoutX="120.0" layoutY="421.0" opacity="0.0" />
+      <TextField fx:id="description" layoutX="283.0" layoutY="421.0" opacity="0.0" />
+      <TextField fx:id="heure" layoutX="473.0" layoutY="409.0" opacity="0.0" />
+      <TextField fx:id="nbrplace" layoutX="134.0" layoutY="465.0" opacity="0.0" />
+      <TextField fx:id="formateur" layoutX="299.0" layoutY="478.0" opacity="0.0" />
+      <Button fx:id="supprimer" layoutX="583.0" layoutY="465.0" mnemonicParsing="false" onAction="#supprimer" text="supprimer" />
+   </children>
+</AnchorPane>

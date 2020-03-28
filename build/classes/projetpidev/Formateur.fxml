@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="projetpidev.FormateurController">
+   <children>
+      <Button fx:id="ajouterBtn" layoutX="639.0" layoutY="188.0" mnemonicParsing="false" onAction="#ajouter" prefHeight="38.0" prefWidth="111.0" style="-fx-background-color: #a8ae21;" text="Ajouter" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font></Button>
+      <TextField fx:id="nom" layoutX="360.0" layoutY="273.0" prefHeight="25.0" prefWidth="165.0" />
+      <TextField fx:id="prenom" layoutX="360.0" layoutY="324.0" prefHeight="25.0" prefWidth="165.0" />
+      <Label layoutX="295.0" layoutY="278.0" text="Nom">
+         <font>
+            <Font name="Arial Bold" size="12.0" />
+         </font></Label>
+      <Label layoutX="295.0" layoutY="329.0" text="Prénom">
+         <font>
+            <Font name="Arial Bold" size="12.0" />
+         </font></Label>
+      <Label layoutX="292.0" layoutY="415.0" text="Photo">
+         <font>
+            <Font name="Arial Bold" size="12.0" />
+         </font></Label>
+      <Button fx:id="afficherBtn" layoutX="639.0" layoutY="239.0" mnemonicParsing="false" onAction="#afficher" prefHeight="38.0" prefWidth="111.0" style="-fx-background-color: #a8ae21;" text="Afficher" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font></Button>
+      <Button fx:id="supprimerBtn" layoutX="639.0" layoutY="337.0" mnemonicParsing="false" onAction="#supprimer" prefHeight="38.0" prefWidth="111.0" style="-fx-background-color: #a8ae21;" text="Supprimer" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font></Button>
+      <Button fx:id="rechercherBtn" layoutX="639.0" layoutY="385.0" mnemonicParsing="false" onAction="#rechercher" prefHeight="38.0" prefWidth="111.0" style="-fx-background-color: #a8ae21;" text="Rechercher" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font></Button>
+      <ImageView fx:id="nomImage" fitHeight="120.0" fitWidth="177.0" layoutX="383.0" layoutY="381.0" onMouseClicked="#AddImage" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/53310.png" />
+         </image>
+      </ImageView>
+      <AnchorPane layoutY="-8.0" prefHeight="620.0" prefWidth="257.0">
+         <children>
+             <ImageView fitHeight="615.0" fitWidth="262.0" layoutY="7.0" opacity="0.9" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/b28.jpg" />
+               </image>
+            </ImageView>
+            
+         </children>
+      </AnchorPane>
+      <Button fx:id="InformationsBtn" layoutX="24.0" layoutY="484.0" mnemonicParsing="false" opacity="0.8" prefHeight="58.0" prefWidth="198.0" style="-fx-background-color: #a8ae21;" stylesheets="@main.css" text="Informations" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="FormationsBtn" layoutX="24.0" layoutY="401.0" mnemonicParsing="false" opacity="0.8" prefHeight="58.0" prefWidth="198.0" style="-fx-background-color: #a8ae21;" stylesheets="@main.css" text="Formations" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="FormateurBtn" layoutX="24.0" layoutY="313.0" mnemonicParsing="false" opacity="0.8" prefHeight="58.0" prefWidth="198.0" style="-fx-background-color: #a8ae21;" stylesheets="@main.css" text="Formateur" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="EvenementsBtn" layoutX="24.0" layoutY="227.0" mnemonicParsing="false" opacity="0.8" prefHeight="58.0" prefWidth="198.0" style="-fx-background-color: #a8ae21;" stylesheets="@main.css" text="Evénéments" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="EspecesBtn" layoutX="24.0" layoutY="140.0" mnemonicParsing="false" opacity="0.8" prefHeight="58.0" prefWidth="198.0" style="-fx-background-color: #a8ae21;" stylesheets="@main.css" text="Espèces" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="BoutiqueBtn" layoutX="24.0" layoutY="55.0" mnemonicParsing="false" opacity="0.8" prefHeight="58.0" prefWidth="198.0" style="-fx-background-color: #a8ae21;" stylesheets="@main.css" text="Boutique" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Button>
+      <Pane layoutX="273.0" layoutY="27.0" opacity="0.73" prefHeight="86.0" prefWidth="660.0" style="-fx-background-color: #a8ae21;">
+         <children>
+            <Text fill="WHITE" layoutX="81.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gestion des formateurs">
+               <font>
+                  <Font name="System Bold Italic" size="48.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <ImageView fx:id="retour" fitHeight="133.0" fitWidth="210.0" layoutX="790.0" layoutY="468.0" onMouseClicked="#Retour" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/1.png" />
+         </image>
+      </ImageView>
+      <TextArea fx:id="path" layoutX="360.0" layoutY="513.0" prefHeight="70.0" prefWidth="140.0" />
+      <Button fx:id="modifierBtn" layoutX="639.0" layoutY="287.0" mnemonicParsing="false" onAction="#modifier" prefHeight="38.0" prefWidth="111.0" style="-fx-background-color: #a8ae21;" text="Modifier" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

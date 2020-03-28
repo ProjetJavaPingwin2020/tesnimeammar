@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.effect.DropShadow?>
+
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="projetpidev.FormationFrontController">
+   <children>
+      <ImageView fitHeight="350.0" fitWidth="1050.0" opacity="0.82" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/22.jpg" />
+         </image>
+      </ImageView>
+      <Pane layoutY="280.0" opacity="0.6" prefHeight="70.0" prefWidth="1024.0" style="-fx-background-color: #a8ae21;">
+         <children>
+            <Text fill="WHITE" fontSmoothingType="LCD" layoutX="349.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Liste des formations" textAlignment="RIGHT" wrappingWidth="342.283203125">
+               <font>
+                  <Font name="System Bold" size="36.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
