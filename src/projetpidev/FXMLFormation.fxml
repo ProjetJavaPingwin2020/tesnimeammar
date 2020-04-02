@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
-<?import javafx.scene.image.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="projetpidev.FXMLFormationController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="projetpidev.FXMLFormationController">
    <children>
       <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="620.0" prefWidth="257.0" stylesheets="@main.css">
          <children>
@@ -32,7 +37,7 @@
                   <Font name="System Bold" size="14.0" />
                </font>
             </Button>
-            <Button fx:id="FormateurBtn" layoutX="14.0" layoutY="303.0" mnemonicParsing="false" opacity="0.8" prefHeight="58.0" prefWidth="211.0" style="-fx-background-color: #a8ae21;" stylesheets="@main.css" text="Formateur" textFill="WHITE">
+            <Button fx:id="FormateurBtn" layoutX="14.0" layoutY="303.0" mnemonicParsing="false" onAction="#redirection" opacity="0.8" prefHeight="58.0" prefWidth="211.0" style="-fx-background-color: #a8ae21;" stylesheets="@main.css" text="Formateur" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -49,30 +54,61 @@
             </Button>
          </children>
       </AnchorPane>
-      <Label layoutX="260.0" layoutY="141.0" text="Nom" />
-      <Label layoutX="260.0" layoutY="188.0" text="Date" />
-      <Label layoutX="230.0" layoutY="292.0" text="Description" />
-      <Label layoutX="467.0" layoutY="133.0" text="Type" />
-      <Label layoutX="467.0" layoutY="188.0" text="Lieu" />
-      <Label layoutX="467.0" layoutY="238.0" text="Heue" />
-      <Label layoutX="434.0" layoutY="438.0" text="Image" />
-      <TextField fx:id="nom" layoutX="301.0" layoutY="137.0" prefHeight="25.0" prefWidth="138.0" />
-      <ComboBox fx:id="type" layoutX="524.0" layoutY="129.0" prefWidth="150.0" promptText="Type" />
-      <TextField fx:id="lieu" layoutX="525.0" layoutY="184.0" />
-      <DatePicker fx:id="datepicker" layoutX="301.0" layoutY="184.0" prefHeight="25.0" prefWidth="138.0" />
-      <TextArea fx:id="description" layoutX="301.0" layoutY="234.0" prefHeight="130.0" prefWidth="149.0" />
-      <Label layoutX="467.0" layoutY="331.0" text="Nombre" />
-      <TextField fx:id="nbrplace" layoutX="525.0" layoutY="327.0" />
-      <Label layoutX="246.0" layoutY="391.0" text="Formateur" />
-      <ComboBox fx:id="formateur" layoutX="315.0" layoutY="387.0" prefWidth="150.0" />
-      <Button fx:id="ajouterBtn" layoutX="338.0" layoutY="483.0" mnemonicParsing="false" onAction="#Ajouter" text="Ajouter" />
-      <ImageView fx:id="nomImage" fitHeight="146.0" fitWidth="200.0" layoutX="499.0" layoutY="371.0" onMouseClicked="#AddImage" pickOnBounds="true" preserveRatio="true">
+      <Label layoutX="313.0" layoutY="154.0" text="Nom" />
+      <Label layoutX="314.0" layoutY="201.0" text="Date" />
+      <Label layoutX="308.0" layoutY="292.0" text="Description" />
+      <Label layoutX="626.0" layoutY="141.0" text="Type" />
+      <Label layoutX="628.0" layoutY="188.0" text="Lieu" />
+      <Label layoutX="625.0" layoutY="238.0" text="Heue" />
+      <Label layoutX="623.0" layoutY="356.0" text="Image" />
+      <TextField fx:id="nom" layoutX="379.0" layoutY="150.0" prefHeight="25.0" prefWidth="149.0" />
+      <ComboBox fx:id="type" layoutX="682.0" layoutY="137.0" prefWidth="150.0" promptText="Type" />
+      <TextField fx:id="lieu" layoutX="683.0" layoutY="184.0" />
+      <DatePicker fx:id="datepicker" layoutX="379.0" layoutY="193.0" prefHeight="25.0" prefWidth="150.0" />
+      <TextArea fx:id="description" layoutX="384.0" layoutY="250.0" prefHeight="115.0" prefWidth="132.0" />
+      <Label layoutX="628.0" layoutY="292.0" text="Nombre" />
+      <TextField fx:id="nbrplace" layoutX="683.0" layoutY="287.0" />
+      <Label layoutX="310.0" layoutY="391.0" text="Formateur" />
+      <ComboBox fx:id="formateur" layoutX="381.0" layoutY="387.0" prefHeight="25.0" prefWidth="138.0" />
+      <Button fx:id="ajouterBtn" layoutX="450.0" layoutY="527.0" mnemonicParsing="false" onAction="#Ajouter" prefHeight="39.0" prefWidth="120.0" style="-fx-background-color: #a8ae21;;" text="  Ajouter" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font></Button>
+      <ImageView fx:id="nomImage" fitHeight="133.0" fitWidth="173.0" layoutX="683.0" layoutY="329.0" onMouseClicked="#AddImage" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/b2.jpg" />
          </image>
       </ImageView>
-      <TextField fx:id="heure" layoutX="525.0" layoutY="234.0" />
-      <Button fx:id="afficher" layoutX="832.0" layoutY="315.0" mnemonicParsing="false" onAction="#afficher" text="Afficher" />
-      <TextArea fx:id="path" layoutX="718.0" layoutY="347.0" prefHeight="58.0" prefWidth="200.0" />
+      <TextField fx:id="heure" layoutX="683.0" layoutY="234.0" />
+      <Button fx:id="afficher" layoutX="592.0" layoutY="527.0" mnemonicParsing="false" onAction="#afficher" prefHeight="39.0" prefWidth="120.0" style="-fx-background-color: #a8ae21;;" text="     Afficher" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font></Button>
+      <TextArea fx:id="path" layoutX="683.0" layoutY="460.0" prefHeight="58.0" prefWidth="173.0" />
+       <ImageView fx:id="retour" fitHeight="90.0" fitWidth="150.0" layoutX="845.0" layoutY="502.0" onMouseClicked="#retour" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/1.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="623.0" layoutY="460.0" text="Path" />
+      <Pane layoutX="287.0" layoutY="30.0" opacity="0.82" prefHeight="86.0" prefWidth="660.0" style="-fx-background-color: #a8ae21;">
+         <children>
+            <Text fill="WHITE" layoutX="97.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gestion des formations" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold Italic" size="48.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <ImageView fitHeight="31.0" fitWidth="28.0" layoutX="454.0" layoutY="533.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/icons_add-512.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="31.0" fitWidth="28.0" layoutX="603.0" layoutY="533.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/unnamed.png" />
+         </image>
+      </ImageView>  
    </children>
 </AnchorPane>

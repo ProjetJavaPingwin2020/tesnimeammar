@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import Entity.FosUser;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -170,4 +171,15 @@ public class UserSevice {
         return pseudoL;
     }
 
+     private final String GET_USER_BY_ID = "SELECT * FROM fos_user WHERE id=?";
+      public FosUser getUSERById(int id) throws SQLException {
+        PreparedStatement ps = cnx.prepareStatement(GET_USER_BY_ID);
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        rs.next();//next return boolean
+        return mapResultsToUSER(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5));
+    }
+       private FosUser mapResultsToUSER(int id, String username,  String username_canoncial, String email,  String email_canoncial) {
+        return new FosUser(id, username, username_canoncial, email, email_canoncial);
+    }
 }

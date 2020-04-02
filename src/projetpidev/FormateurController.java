@@ -18,6 +18,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -93,18 +95,13 @@ public class FormateurController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-       // file = 0;
-     //   type.getItems().addAll("Chasse", "Peche");
-        //c = (int) (Math.random() * (300000 - 2 + 1)) + 2;
-       // pDir = new File("src/images/addimage" + c + ".jpg");
-        //lien = "images/addimage" + c + ".jpg";
+       
 
     }    
 
     @FXML
     private void ajouter(ActionEvent event) throws FileNotFoundException {
-          //if (verifChamps() && verifNom()) {
+          if (verifChamps() && verifNom()&& verifPrenom()) {
             String Nom = nom.getText();
             String Prenom = prenom.getText();
             //String Img = img.getText();
@@ -121,14 +118,14 @@ public class FormateurController implements Initializable {
 
             if (status > 0) {
                 Alert alert = new Alert(AlertType.INFORMATION);
-                alert.setTitle("Ajouter utilisateur");
+                alert.setTitle("Ajouter formateur");
                 alert.setHeaderText("Dialogue information");
                 alert.setContentText("Ajout avec succés");
 
                 alert.showAndWait();
             } else {
                 Alert alert = new Alert(AlertType.ERROR);
-                alert.setTitle("Ajouter utilisateur");
+                alert.setTitle("Ajouter formateur");
                 alert.setHeaderText("Dialogue ERREUR");
                 alert.setContentText("Un probléme est survenu");
 
@@ -137,7 +134,7 @@ public class FormateurController implements Initializable {
 
 //s        }
     }
-
+    }
     @FXML
     private void modifier(ActionEvent event) {
          String Nom = nom.getText();
@@ -151,7 +148,7 @@ public class FormateurController implements Initializable {
         System.out.println(status);
         if (status == 0) {
             Alert alert = new Alert(AlertType.INFORMATION);
-            alert.setTitle("Modifier formateur");
+            alert.setTitle("Modifier Formateur");
             alert.setHeaderText("Dialogue information");
             alert.setContentText("Modification avec succés");
 
@@ -159,7 +156,7 @@ public class FormateurController implements Initializable {
 
         } else {
             Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Modifier formateur");
+            alert.setTitle("Modifier Formateur");
             alert.setHeaderText("Dialogue ERREUR");
             alert.setContentText("Un probléme est survenu");
 
@@ -211,26 +208,13 @@ public class FormateurController implements Initializable {
 
         nom.setText((f.getNom()));
         prenom.setText((f.getPrenom()));
+        
         //img.setText(f.getImg());
         //nomImage.setText(f.getNomImage());
     }
 
     
-     public boolean copier(File source, File dest) {
-        try (InputStream sourceFile = new java.io.FileInputStream(source);
-                OutputStream destinationFile = new FileOutputStream(dest)) {
-            // Lecture par segment de 0.5Mo  
-            byte buffer[] = new byte[512 * 1024];
-            int nbLecture;
-            while ((nbLecture = sourceFile.read(buffer)) != -1) {
-                destinationFile.write(buffer, 0, nbLecture);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false; // Erreur 
-        }
-        return true; // Résultat OK  
-    }
+  
     @FXML
     private void AddImage(MouseEvent event) throws MalformedURLException {
          fileChooser = new FileChooser();
@@ -260,7 +244,53 @@ public class FormateurController implements Initializable {
     }
 
     
-
-    
+private boolean verifChamps() {
+        if (nom.getText().isEmpty() | prenom.getText().isEmpty()|path.getText().isEmpty()  ) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Validation des champs");
+            alert.setHeaderText(null);
+            alert.setContentText("Il faut remplir tous les champs");
+            alert.showAndWait();
+            return false;
+        }
+        return true;
+}
+     
+      private boolean verifNom() {
+        Pattern p = Pattern.compile("[a-zA-Z]+");
+        Matcher m = p.matcher(nom.getText());
+        if (m.find() && m.group().equals(nom.getText())) {
+            return true;
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Validation des champs");
+            alert.setHeaderText(null);
+            alert.setContentText("Verifier le nom du formateur");
+            alert.showAndWait();
+            return false;
+        }
+      }
+     private boolean verifPrenom() {
+        Pattern p = Pattern.compile("[a-zA-Z]+");
+        Matcher m = p.matcher(prenom.getText());
+        if (m.find() && m.group().equals(prenom.getText())) {
+            return true;
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Validation des champs");
+            alert.setHeaderText(null);
+            alert.setContentText("Verifier le prenom du formateur");
+            alert.showAndWait();
+            return false;
+        }
+      }
+    @FXML
+    private void redirection(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLFormation.fxml"));
+        Parent root = loader.load();
+        FXMLFormationController acc = loader.getController();
+        FormationsBtn.getScene().setRoot(root);
+        
+    }
     
 }

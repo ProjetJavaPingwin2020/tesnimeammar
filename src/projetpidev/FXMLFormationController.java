@@ -4,6 +4,7 @@ import Entity.Formateur;
 import Entity.Formation;
 import Services.ServiceFormateur;
 import Services.ServiceFormation;
+import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -22,6 +23,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -72,7 +75,7 @@ public class FXMLFormationController implements Initializable {
     private TextArea description;
     @FXML
     private TextField heure;
-   
+
     @FXML
     private TextField nbrplace;
     @FXML
@@ -91,24 +94,25 @@ public class FXMLFormationController implements Initializable {
     @FXML
     private TextArea path;
 
-      private FileChooser fileChooser;
+    private FileChooser fileChooser;
     private File fill;
     private Image image;
     private FileInputStream fis;
-     private Stage stage;
+    private Stage stage;
     Formateur f = new Formateur();
 
     ServiceFormateur sf = new ServiceFormateur();
     @FXML
     private ImageView nomImage;
-   
-    
+    @FXML
+    private ImageView retour;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-         type.getItems().addAll("Chasse", "Peche");
+        type.getItems().addAll("Chasse", "Peche");
 
         try {
             fillcombo();
@@ -132,6 +136,7 @@ public class FXMLFormationController implements Initializable {
     @FXML
     private void Ajouter(ActionEvent event) throws SQLException, FileNotFoundException {
 
+        if (verifChamps() && verifNom() && verifLieu() && verifDescription()  && verifNum()){
         ServiceFormation ser = new ServiceFormation();
 
         String Nom = nom.getText();
@@ -156,50 +161,21 @@ public class FXMLFormationController implements Initializable {
         System.out.println(formateur1);
 
         fis = new FileInputStream(fill);
-        Formation f = new Formation(Nom, Type, d, Lieu, Description, Heure, Nbrplace,id,(InputStream) fis);
-        Formation f1 = new Formation(nom.getText(), type.getValue(), d, Lieu, Description, Heure, Nbrplace,id,(InputStream) fis);
+        Formation f = new Formation(Nom, Type, d, Lieu, Description, Heure, Nbrplace, id, (InputStream) fis);
+        Formation f1 = new Formation(nom.getText(), type.getValue(), d, Lieu, Description, Heure, Nbrplace, id, (InputStream) fis);
         /*for (Formateur formateur : type.getItems()) {
          Formation f = new Formation(Formateur.getNom());*/
         ser.ajouter(f1); //ligne hedhi tekhou valeur retournée par insert (eli heya st sammineha status o besh naamlou beha comparaison)
-        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-        /*
-         if (status > 0) {
-         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-         alert.setTitle("Ajouter Formation");
-         alert.setHeaderText("Dialogue information");
-         alert.setContentText("Formation ajoutée avec succés");
-
-         alert.showAndWait();
-         } else {
-         Alert alert = new Alert(Alert.AlertType.ERROR);
-         alert.setTitle("Ajouter Formation");
-         alert.setHeaderText("Dialogue ERREUR");
-         alert.setContentText("Un probléme est survenu");
-
-         alert.showAndWait();
-         }
-         */
+    /*    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Ajouter formateur");
+        alert.setHeaderText("Dialogue information");
+        alert.setContentText("Ajout avec succés");*/
+       // System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+       
+    }
     }
 
-    /*public int findbynomformateur(String name) throws SQLException
-     {
-     String req="Select * FROM formateur";
-     Statement st = cnx.createStatement();
-     ResultSet res=st.executeQuery(req);
-     while(res.next()){
-     if(res.getString("nom").equals(name))
-                    
-     {
-     String val=res.getString("id");
-     System.out.println(val);
-     int valeur=Integer.parseInt(val);
-     return valeur;
-                    
-     }
-     }
-     int valeur=0;
-     return valeur;
-     }    */
+   
 //tb3in image hdhom bch njrbhom
   /*  public static boolean copier(File source, File dest) {
      try (InputStream sourceFile = new java.io.FileInputStream(source);
@@ -225,7 +201,7 @@ public class FXMLFormationController implements Initializable {
      }*/
     @FXML
     private void AddImage(MouseEvent event) throws MalformedURLException {
-       fileChooser = new FileChooser();
+        fileChooser = new FileChooser();
 
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image files", "*.png", "*.jpg", "*.gif"));
         //Stage stagec = (Stage) parent.getScene().getWindow();
@@ -243,10 +219,96 @@ public class FXMLFormationController implements Initializable {
 
     @FXML
     private void afficher(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLAfficherFormation.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLAfficherFormation.fxml"));//FXMLAfficherFormation.fxml
         Parent root = loader.load();
         FXMLAfficherFormationController acc = loader.getController();
         afficher.getScene().setRoot(root);
     }
 
+    @FXML
+    private void retour(MouseEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLMenu.fxml"));
+        Parent root = loader.load();
+        FXMLMenuController acc = loader.getController();
+        retour.getScene().setRoot(root);
+    }
+    
+     private boolean verifChamps() {
+        if (nom.getText().isEmpty() | type.getValue().isEmpty()  | lieu.getText().isEmpty() | description.getText().isEmpty() | heure.getText().isEmpty()| nbrplace.getText().isEmpty()| formateur.getValue().isEmpty()|path.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Validation des champs");
+            alert.setHeaderText(null);
+            alert.setContentText("Il faut remplir tous les champs");
+            alert.showAndWait();
+            return false;
+        }
+        return true;
+}
+     
+      private boolean verifNom() {
+        Pattern p = Pattern.compile("[a-zA-Z]+");
+        Matcher m = p.matcher(nom.getText());
+        if (m.find() && m.group().equals(nom.getText())) {
+            return true;
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Validation des champs");
+            alert.setHeaderText(null);
+            alert.setContentText("Verifier le nom de la formation");
+            alert.showAndWait();
+            return false;
+        }
+      }
+       private boolean verifLieu() {
+        Pattern p = Pattern.compile("[a-zA-Z]+");
+        Matcher m = p.matcher(lieu.getText());
+        if (m.find() && m.group().equals(lieu.getText())) {
+            return true;
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Validation des champs");
+            alert.setHeaderText(null);
+            alert.setContentText("Verifier le lieu de la formation");
+            alert.showAndWait();
+            return false;
+        }
+      }
+        private boolean verifDescription() {
+        Pattern p = Pattern.compile("[a-zA-Z]+");
+        Matcher m = p.matcher(description.getText());
+        if (m.find() && m.group().equals(description.getText())) {
+            return true;
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Validation des champs");
+            alert.setHeaderText(null);
+            alert.setContentText("Verifier la description de la formation");
+            alert.showAndWait();
+            return false;
+        }
+      }
+         private boolean verifNum() {
+        Pattern p = Pattern.compile("[0-9]+");
+        Matcher m = p.matcher(nbrplace.getText());
+       
+        if (m.find() && m.group().equals(nbrplace.getText())) {
+            return true;
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Validation de nombre de places");
+            alert.setHeaderText(null);
+            alert.setContentText("Verifier le nombre de places saisis");
+            alert.showAndWait();
+            return false;
+        }
+    }
+
+    @FXML
+    private void redirection(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Formateur.fxml"));
+        Parent root = loader.load();
+        FormateurController acc = loader.getController();
+        FormateurBtn.getScene().setRoot(root);
+        
+    }
 }

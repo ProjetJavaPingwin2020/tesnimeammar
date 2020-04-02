@@ -50,103 +50,52 @@ public class FXMLAfficheFormateurController implements Initializable {
 
     @FXML
     TableView<Formateur> table;
-    
+
     @FXML
     private TextField nom;
     @FXML
     private TextField prenom;
-    
- /* @FXML
-    private TableColumn<Formateur, String> nom;
-   @FXML
-    private TableColumn<Formateur, String> prenom;*/
-  
-    
 
+    /* @FXML
+     private TableColumn<Formateur, String> nom;
+     @FXML
+     private TableColumn<Formateur, String> prenom;*/
     public ObservableList<Formateur> cls = FXCollections.observableArrayList(); //on utilise ObservableList pcq on a un tableView
     @FXML
     private ImageView retour;
-     
+
     @FXML
     private ImageView image;
     private FileInputStream fis;
-     public static Formateur fo;
-          private FileChooser fileChooser ;
+    public static Formateur fo;
+    private FileChooser fileChooser;
     private File file;
-   
-    
-   
-    
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-     /*   try {
-            String sql = "SELECT*  FROM formateur";
-            Connection con = ConnexionBase.getInstance().getCnx();
-            PreparedStatement pre = (PreparedStatement) con.prepareStatement(sql);
-            ResultSet rs = pre.executeQuery();
-            while (rs.next()) {
-                System.out.println("bbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
-                cls.add(new Formateur(rs.getString(2), rs.getString(3)));
-            }
-          
-                        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-            
-        nom.setCellValueFactory(new PropertyValueFactory<>("nom"));
-        prenom.setCellValueFactory(new PropertyValueFactory<>("prenom"));
-        
-      //  image.setCellValueFactory(new PropertyValueFactory<>("img"));
-      //  nomImage.setCellValueFactory(new PropertyValueFactory<>("nomImage"));
-
-        table.setItems(cls);
-       /*  try {
-        ServiceFormateur ser = new ServiceFormateur();
-        List<Formateur> lista = ser.readAll();
-        for (Formateur aux : lista)
-        {
-          cls.add(new Formateur(aux.getNom(),aux.getPrenom()));  
-                    table.setItems(cls);
-
-        }
-        
-        nom.setCellValueFactory(new PropertyValueFactory<>("nom"));
-        prenom.setCellValueFactory(new PropertyValueFactory<>("prenom"));
-      
-        
-     table.setItems(cls);
        
        
-         }catch (SQLException ex) {
-                    System.out.println(ex);
-                 }
-       
-     */
         TableColumn nom = new TableColumn("Nom");
         TableColumn prenom = new TableColumn("Prenom");
-      table.getColumns().addAll(nom, prenom);
-        
-        
-        
+        table.getColumns().addAll(nom, prenom);
+
         ServiceFormateur sf = new ServiceFormateur();
         nom.setCellValueFactory(new PropertyValueFactory<Formateur, String>("nom"));
         prenom.setCellValueFactory(new PropertyValueFactory<Formateur, String>("prenom"));
-     
+
         try {
             table.setItems(sf.getAllFormateurs());
         } catch (SQLException ex) {
             Logger.getLogger(FXMLAfficheFormateurController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-        
+
     }
-    
+
     @FXML
-        private void Retour(MouseEvent event) throws IOException {
+    private void Retour(MouseEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Formateur.fxml"));
         Parent root = loader.load();
         FormateurController acc = loader.getController();
@@ -157,19 +106,14 @@ public class FXMLAfficheFormateurController implements Initializable {
     private void display(MouseEvent event) throws SQLException, IOException {
         System.out.println("aaaaaaaaaaaaaaaaaaaa");
         Formateur f = table.getSelectionModel().getSelectedItem();
-        
+
         ServiceFormateur sf = new ServiceFormateur();
         nom.setText(f.getNom());
         prenom.setText(f.getPrenom());
-                        
-        
-System.out.println(f.getNom());
 
-         
+        System.out.println(f.getNom());
+
         image.setImage(sf.getFormateurImageByID(f.getId()));
     }
-    
-
-                        
 
 }

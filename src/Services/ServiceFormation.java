@@ -152,12 +152,13 @@ public class ServiceFormation implements IService<Formation>{
      public ObservableList<Formation> getAllFormations() throws SQLException {
         ObservableList<Formation> data = FXCollections.observableArrayList();
         PreparedStatement ps = cnx.prepareStatement(GET_All_Formation);
-     // UserSevice usrs = new UserSevice();
-      
-        
+        UserSevice usrs = new UserSevice();
+        ServiceFormation sf = new ServiceFormation();
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
             FosUser u = new FosUser();
+            Formation f = new Formation();
+            
            // //u=usrs.getUserByid
             data.add(ResultsToFormation(rs.getInt(1),rs.getString(2), rs.getString(3), rs.getDate(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getInt(8),rs.getInt(9)));
         }
@@ -187,52 +188,21 @@ public class ServiceFormation implements IService<Formation>{
         }
         return st;
     }
-    @Override
-    public void update(Formation t, int id) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      public void updatetab(Formation f) throws SQLException {
+        PreparedStatement PS=cnx.prepareStatement("UPDATE `test1.1`.`formation` SET `nom`=? ,`type`=? ,`date`=?,`lieu`=?,`description`=? ,`heure`=? ,`nbrplace`=? ,`formateur`=? WHERE `id`=?");
+        PS.setString(1,f.getNom());
+        PS.setString(2, f.getType());
+        PS.setDate(3,f.getDate());
+        PS.setString(4,f.getLieu());
+        PS.setString(5,f.getDescription());
+          PS.setString(6,f.getHeure());
+          PS.setInt(7,f.getNbrplace());
+          PS.setInt(8,f.getFormateur());
+        
+        PS.executeUpdate();
     }
 
-   /*  private final String SupprimerFormation = "delete from formation where id=?";
-      public void delete(int id) throws SQLException {
-        PreparedStatement ps = cnx.prepareStatement(SupprimerFormation);
-        ps.setInt(1, id);
-        ps.executeUpdate();
-        System.out.println("Formation supprimée avec succès");
 
-    }*/
-    
-  /*  @Override
-    public void delete(int id) throws SQLException {
-        PreparedStatement PS = cnx.prepareStatement("DELETE FROM `test1.1`.`formation` WHERE `id`=?");
-        PS.setInt(1,id);
-        PS.executeUpdate();
-    }*/
-  /*  public static int delete(String nom) {
-        int st = 0; //st mtaa l aada hahaha
-        try {
-            String req = "delete from formation where nom='" + nom + "'";
-            Connection con = ConnexionBase.getInstance().getCnx();
-            PreparedStatement pre = (PreparedStatement) con.prepareStatement(req);
-            st = pre.executeUpdate(req);
-            System.out.println("Formation supprimé avec succés");
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        return st;
-    }*/
-
-
-   /*@Override
-    public void delete(int id) throws SQLException {
-        PreparedStatement PS = cnx.prepareStatement("DELETE FROM `test1.1`.`formation` WHERE `id`=?");
-        PS.setInt(1,id);
-        PS.executeUpdate();
-    }*/
-
-   /* @Override
-    public void delete(int id) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }*/
     public ObservableList<ImageView> getAllFormationsImages() throws SQLException, FileNotFoundException, IOException {
         ObservableList<ImageView> img = FXCollections.observableArrayList();
         PreparedStatement ps = cnx.prepareStatement("SELECT image FROM formation");
@@ -256,5 +226,25 @@ public class ServiceFormation implements IService<Formation>{
     @Override
     public void delete(int id) throws SQLException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    private final String GET_Formation_By_ID = "select id, nom, type, date, lieu, description,heure,nbrplace,formateur,image  from  formation where id=?";
+    public Formation getFormationById(int id) throws SQLException {
+        PreparedStatement ps = cnx.prepareStatement(GET_Formation_By_ID);
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        rs.next();//next return boolean
+        return ResultsToFormation(rs.getInt(1),rs.getString(2), rs.getString(3), rs.getDate(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getInt(8),rs.getInt(9));
+    }
+
+    @Override
+   public void update(Formation f,int id) throws SQLException {
+        PreparedStatement PS=cnx.prepareStatement("UPDATE `test1.1`.`formation` SET `nom`=?,`type`=? ,`date`=?,`lieu`=?,`description`=? ,`heure`=? ,`nbrplace`=? ,`formateur`=? WHERE `id`=?");
+        PS.setString(1,f.getNom());
+        PS.setString(2,f.getType());
+        PS.setDate(3,f.getDate());
+        PS.setString(4,f.getLieu());
+        PS.setString(5,f.getDescription());
+        PS.setInt(5,id);
+        PS.executeUpdate();
     }
 }

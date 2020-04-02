@@ -22,9 +22,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
@@ -47,9 +51,6 @@ public class FXMLAfficherFormationController implements Initializable {
     private Statement st;
     @FXML
     private TableView<Formation> table;
-   
-     
- 
     @FXML
     private ImageView image;
     @FXML
@@ -70,7 +71,14 @@ public class FXMLAfficherFormationController implements Initializable {
     private TextField formateur;
     @FXML
     private Button supprimer;
+    @FXML
+    private ImageView retour;
   
+    ServiceFormation sf=new ServiceFormation();
+    
+     private ObservableList<Formation> data = FXCollections.observableArrayList();
+    @FXML
+    private TextField recherche;
     /**
      * Initializes the controller class.
      */
@@ -88,7 +96,7 @@ public class FXMLAfficherFormationController implements Initializable {
         TableColumn formateur = new TableColumn("Formateur");
         table.getColumns().addAll(nom, type,date,lieu,description,heure,nbrplace,formateur);
         
-          ServiceFormation sf = new ServiceFormation();
+          //ServiceFormation sf = new ServiceFormation();
         
          nom.setCellValueFactory(new PropertyValueFactory<Formation, String>("nom"));
         type.setCellValueFactory(new PropertyValueFactory<Formation, String>("type"));
@@ -99,12 +107,23 @@ public class FXMLAfficherFormationController implements Initializable {
         nbrplace.setCellValueFactory(new PropertyValueFactory<Formation, Integer>("nbrplace"));
         formateur.setCellValueFactory(new PropertyValueFactory<Formation, Integer>("formateur"));
        // type.setCellValueFactory(new PropertyValueFactory<Formation, String>("type"));
+         table.setItems(data);
+            table.setEditable(true);
+            nom.setCellFactory(TextFieldTableCell.forTableColumn());
+            type.setCellFactory(TextFieldTableCell.forTableColumn());
+           // nbhtab.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        //  date.setCellFactory(TextFieldTableCell.forTableColumn());
+             lieu.setCellFactory(TextFieldTableCell.forTableColumn());
+              description.setCellFactory(TextFieldTableCell.forTableColumn());
+               heure.setCellFactory(TextFieldTableCell.forTableColumn());
+                nbrplace.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
      
         try {
             table.setItems(sf.getAllFormations());
         } catch (SQLException ex) {
             Logger.getLogger(FXMLAfficherFormationController.class.getName()).log(Level.SEVERE, null, ex);
         }
+      
         
     }   
         public void Aff() throws SQLException{
@@ -144,56 +163,13 @@ public class FXMLAfficherFormationController implements Initializable {
         } catch (SQLException ex) {
             Logger.getLogger(FXMLAfficheFormateurController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+          RechercheAV();
         
           
     }
     
     
-  /*  public void Aff()  throws SQLException{
-                        /*try {
-         cnx = ConnexionBase.getInstance().getCnx();
-            st = cnx.createStatement();
-                        data.clear();
-
-            ResultSet rs = st.executeQuery("select * from formation");
-            while(rs.next()){
-                data.add(new Formation(rs.getString(1),rs.getString(2),rs.getDate(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getInt(8),rs.getInt(9)));
-            }
-
-        } catch (Exception e) {
-                //Logger.getLogger(tab)
-        }*/
-      
-            
-         /*   data.clear();
-        ServiceFormation ser = new ServiceFormation();
-        List<Formation> list = ser.readAll();
-        for (Formation aux : list)
-        {
-          data.add(new Formation(aux.getNom(),aux.getType(), aux.getDate(), aux.getLieu(),aux.getDescription(),aux.getHeure(),aux.getNomImage(),aux.getNbrplace(),aux.getFormateur()));  
-                   
-        }
-        
-               
-            nom.setCellValueFactory(new PropertyValueFactory<>("nom"));
-            type.setCellValueFactory(new PropertyValueFactory<>("type"));
-            date.setCellValueFactory(new PropertyValueFactory<>("date"));
-            lieu.setCellValueFactory(new PropertyValueFactory<>("lieu"));
-            description.setCellValueFactory(new PropertyValueFactory<>("description"));
-            heure.setCellValueFactory(new PropertyValueFactory<>("heure"));
-            nomImage.setCellValueFactory(new PropertyValueFactory<>("NomImage"));
-            nbrplace.setCellValueFactory(new PropertyValueFactory<>("nbrplace"));
-            formateur.setCellValueFactory(new PropertyValueFactory<>("formateur"));
-
-            table.setItems(data);
-            /*table.setEditable(true);
-            nom.setCellFactory(TextFieldTableCell.forTableColumn());
-            type.setCellFactory(TextFieldTableCell.forTableColumn());
-            date.setCellFactory(TextFieldTableCell.forTableColumn());
-            
-            date.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-            id_enseignanttab.setCellFactory(TextFieldTableCell.forTableColumn());*/
+ 
 
     @FXML
     private void display(MouseEvent event) throws SQLException, IOException {
@@ -216,46 +192,7 @@ System.out.println(f.getNom());
     @FXML
     private void supprimer(ActionEvent event) throws SQLException {
             
-      /*      table.setItems(data);
-             String Nom = nom.getText(); 
-          int status = ServiceFormation.delete(Nom);
-        if (status > 0) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Supprimer Formation");
-            alert.setHeaderText("Dialogue information");
-            alert.setContentText("SUPPRESSION avec succés");
-
-            alert.showAndWait();
-
-        } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Supprimer Formation");
-            alert.setHeaderText("Dialogue ERREUR");
-            alert.setContentText("Un probléme est survenu");
-
-            alert.showAndWait();
-
-        }
-//             Aff();
-             //RechercheAV();
-        */
-       //  Formation f = table.getSelectionModel().getSelectedItem();
-       // System.out.println(asso.getId()); 
-      //  ServiceFormation serf= new ServiceFormation();
-       // serf.delete(f.getId());
-       // table.setItems(data);
-      /*  table.setItems(data);
-
-             ObservableList<Formation> allFormations,SingleFormation ;
-             allFormations=table.getItems();
-             SingleFormation=table.getSelectionModel().getSelectedItems();
-             Formation A = SingleFormation.get(0);
-             ServiceFormation serf = new ServiceFormation(); // STD = Service TAB DEMANDE
-             serf.delete(A.getNom());
-             SingleFormation.forEach(allFormations::remove);
-             table.setItems(data);
-    }
-*/       
+         
          String Nom = nom.getText(); //yekhou nom eli aatithoulou besh yfasakh bih
 
         int status = ServiceFormation.delete(Nom);
@@ -265,6 +202,7 @@ System.out.println(f.getNom());
             alert.setHeaderText("Dialogue information");
             alert.setContentText("SUPPRESSION avec succés");
             //table.setItems(data);
+            
             alert.showAndWait();
             ServiceFormation sf = new ServiceFormation();
              try {
@@ -287,25 +225,64 @@ System.out.println(f.getNom());
             Logger.getLogger(FXMLAfficherFormationController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        }
-         
-        
-        
-                           		
-           /* table.setItems(data);
-
-             ObservableList<Formation> allFormations,SingleFormations ;
-             allFormations=table.getItems();
-             SingleFormations=table.getSelectionModel().getSelectedItems();
-             Formation F = SingleFormations.get(0);
-             ServiceFormation serf = new ServiceFormation(); // STD = Service TAB DEMANDE
-             serf.delete(F.getId());
-             SingleFormations.forEach(allFormations::remove);
-        */
-        
-        
-             
+        }    
         
      
 }
+
+    
+    @FXML
+    private void retour(MouseEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLFormation.fxml"));
+        Parent root = loader.load();
+        FXMLFormationController acc = loader.getController();
+        retour.getScene().setRoot(root);
+    }
+     
+    public void Change_Nom(TableColumn.CellEditEvent bb) throws SQLException{
+     Formation tab_Formationselected = table.getSelectionModel().getSelectedItem();
+     tab_Formationselected.setNom(bb.getNewValue().toString());
+     sf.updatetab(tab_Formationselected);
+ }
+     
+     
+     @FXML
+ public void RechercheAV(){
+                // Wrap the ObservableList in a FilteredList (initially display all data).
+        FilteredList<Formation> filteredData = new FilteredList<>(data, b -> true);
+		
+		// 2. Set the filter Predicate whenever the filter changes.
+		recherche.textProperty().addListener((observable, oldValue, newValue) -> {
+			filteredData.setPredicate(formation -> {
+				// If filter text is empty, display all persons.
+								
+				if (newValue == null || newValue.isEmpty()) {
+					return true;
+				}
+				
+				// Compare first name and last name of every person with filter text.
+				String lowerCaseFilter = newValue.toLowerCase();
+				
+				if (formation.getNom().toLowerCase().indexOf(lowerCaseFilter) != -1 ) {
+					return true; // Filter matches first name.
+				} else if (formation.getType().toLowerCase().indexOf(lowerCaseFilter) != -1) {
+					return true; // Filter matches last name.
+				}
+				else if (String.valueOf(formation.getLieu()).indexOf(lowerCaseFilter)!=-1)
+				     return true;
+				     else  
+				    	 return false; // Does not match.
+			});
+		});
+		
+		// 3. Wrap the FilteredList in a SortedList. 
+		SortedList<Formation> sortedData = new SortedList<>(filteredData);
+		
+		// 4. Bind the SortedList comparator to the TableView comparator.
+		// 	  Otherwise, sorting the TableView would have no effect.
+		sortedData.comparatorProperty().bind(table.comparatorProperty());
+		
+		// 5. Add sorted (and filtered) data to the table.
+		table.setItems(sortedData);
+    }
 }
