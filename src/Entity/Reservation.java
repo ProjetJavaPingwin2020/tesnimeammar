@@ -14,14 +14,30 @@ public class Reservation {
    
     private int idr;
     private int idformation;
-    public String etat;
-    public String avis;
+  
     public int idu;
+      public String etat;
+    public String avis;
     private String username;
     private String nomformation;
     public int nbrres;
 
     public Reservation() {
+    }
+
+    public Reservation(int idformation, int idu, String etat, String avis) {
+        this.idformation = idformation;
+        this.idu = idu;
+        this.etat = etat;
+        this.avis = avis;
+    }
+    
+
+    public Reservation(int idformation, String etat, String avis, int idu) {
+        this.idformation = idformation;
+        this.etat = etat;
+        this.avis = avis;
+        this.idu = idu;
     }
 
     public Reservation(int idr, int idformation, String etat, String avis, int idu, String username, String nomformation) {
@@ -59,13 +75,7 @@ public class Reservation {
         this.idu = idu;
     }
 
-    public Reservation(int idformation, String etat, String avis, int idu) {
-        this.idformation = idformation;
-        this.etat = etat;
-        this.avis = avis;
-        this.idu = idu;
-    }
-
+    
     public Reservation(int idr, int idformation, int idu) {
         this.idr = idr;
         this.idformation = idformation;
@@ -118,6 +128,22 @@ public class Reservation {
 
     public void setNbrres(int nbrres) {
         this.nbrres = nbrres;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getNomformation() {
+        return nomformation;
+    }
+
+    public void setNomformation(String nomformation) {
+        this.nomformation = nomformation;
     }
 
     

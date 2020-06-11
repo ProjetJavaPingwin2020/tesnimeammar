@@ -2,6 +2,7 @@ package Services;
 
 import Entity.Formateur;
 import Entity.Formation;
+import Entity.FosUser;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -20,6 +21,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import static jdk.nashorn.internal.runtime.Debug.id;
 import utils.ConnexionBase;
 
 /**
@@ -37,18 +39,18 @@ public class ServiceFormateur {
     }
 
 
-     public static int ajouter(Formateur t) {
+    public static int ajouter(Formateur t) {
 
         int st = 0;
 
         try {
-            String requeteInsert = "INSERT INTO `formateur` (`nom`, `prenom`, `image`) VALUES ( ?,?,?);";
+            String requeteInsert = "INSERT INTO `formateur` (`nom`, `prenom`, `nomImage`) VALUES ( ?,?,?);";
             Connection con = ConnexionBase.getInstance().getCnx();
             PreparedStatement pre = (PreparedStatement) con.prepareStatement(requeteInsert);
             pre.setString(1, t.getNom());
             pre.setString(2, t.getPrenom());
-           // pre.setString(4, t.getNomImage());
-            pre.setBinaryStream(3, t.getImage());
+            pre.setString(3, t.getNomImage());
+          //  pre.setBinaryStream(3, t.getNomImage());
 
             st = pre.executeUpdate();
             System.out.println("formateur ajouté avec succés");
@@ -61,7 +63,7 @@ public class ServiceFormateur {
     }
 
     public static int delete(String nom) {
-        int st = 0; //st mtaa l aada hahaha
+        int st = 0; 
         try {
             String req = "delete from formateur where nom='" + nom + "'";
             Connection con = ConnexionBase.getInstance().getCnx();
@@ -77,7 +79,7 @@ public class ServiceFormateur {
     public static int update(Formateur f, String name) {
         int st = 0;
         try {
-          String req = "UPDATE Formateur SET `nom`='" + f.getNom() + "', `prenom`='" + f.getPrenom()+ "', `image`='" + f.getImage()  + "' WHERE `nom` ='" + name + "'";
+          String req = "UPDATE Formateur SET `nom`='" + f.getNom() + "', `prenom`='" + f.getPrenom()+ "', `nomImage`='" + f.getNomImage()+ "' WHERE `nom` ='" + name + "'";
             Connection con = ConnexionBase.getInstance().getCnx();
             PreparedStatement pre = (PreparedStatement) con.prepareStatement(req);
             pre.executeUpdate();
@@ -99,10 +101,10 @@ public class ServiceFormateur {
             String nom = rs.getString("nom");
             String prenom = rs.getString("prenom");
            // String img = rs.getString("img");
-           // String Image = rs.getString("Image");
-            InputStream image = rs.getBinaryStream("image");
+           String nomImage = rs.getString("nomImage");
+        //   InputStream image = rs.getBinaryStream("image");
 
-            Formateur ff = new Formateur(nom, prenom, image);
+            Formateur ff = new Formateur(nom, prenom, nomImage);
             f = ff;
         }
         return f;
@@ -117,11 +119,7 @@ public class ServiceFormateur {
         ResultSet rs = pre.executeQuery();
         while (rs.next()) {
             Formateur f = new Formateur();
-            
-            f.setNom(rs.getString(2));
-            f.setPrenom(rs.getString(3));
-           // f.setImg(rs.getString(4));
-            //f.setImage(rs.getBinaryStream(4));
+          
             
             arr.add(f);
 
@@ -129,26 +127,16 @@ public class ServiceFormateur {
         return arr;
     }
     
-     public Image getFormateurImageByID(int id) throws SQLException, FileNotFoundException, IOException {
-        PreparedStatement ps = cnx.prepareStatement("SELECT image FROM formateur WHERE id = ?");
+     public String getFormateurImageByID(int id) throws SQLException, FileNotFoundException, IOException {
+         String is ="";
+        PreparedStatement ps = cnx.prepareStatement("SELECT nomImage FROM formateur WHERE id = ?");
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
-            InputStream is = rs.getBinaryStream("image");
-            OutputStream os = new FileOutputStream(new File("photo.jpg"));
-            byte[] content = new byte[1024];
-            int size = 0;
-            while ((size = is.read(content)) != -1) {
-                os.write(content, 0, size);
-            }
-            os.close();
-            is.close();
-
-        }
-        Image image = new Image("file:photo.jpg");
-        return image;
-    
-    
+        is = rs.getString("nomImage");
+}
+        
+        return is;
     
      }
     public List<Formateur> readformateur() throws SQLException {
@@ -161,43 +149,13 @@ public class ServiceFormateur {
         while (rs.next()) {
             String nom = rs.getString("nom");
             Formateur f = new Formateur(nom);
+            
             AL.add(f);
         }
         return AL;
     }
-    /*
-    public List<Formateur> readfor() throws SQLException {
-          
-        List<Formateur> AL = new ArrayList<>();
-        st = cnx.createStatement();
-        ResultSet rs = pre.executeQuery("select * from formateur");
-        while (rs.next()) {
-            String nom = rs.getString("nom");
-            Formateur t = new Formateur(nom);
-            AL.add(t);
-        }
-        return AL;
-    }*/
-    
-   /* public int findbynomformateur(String name) throws SQLException
-    {
-        String req= "SELECT * FROM formateur";
-        st = cnx.createStatement();
-        ResultSet res = st.executeQuery(req);
-        while (res.next()){
-            if(res.getString("nom").equals(name))
-            {
-                String val=res.getString("id");
-                System.out.println(val);
-                int valeur = Integer.parseInt(val);
-                return valeur;
-                       
-                        }
-        }
-        int valeur=0;
-        return valeur;
-    }
-  */
+ 
+  
      private final String GET_All_Formateur = "select id,nom,prenom from formateur ";
      
      public ObservableList<Formateur> getAllFormateurs() throws SQLException {
@@ -214,5 +172,17 @@ public class ServiceFormateur {
      private Formateur ResultsToFormateur(int id,String nom, String prenom) {
        return new Formateur(id , nom, prenom);
     } 
+        private final String GET_Formateur_BY_ID = "SELECT * FROM formateur WHERE id=?";
+      public Formateur getFormateurById(int id) throws SQLException {
+        PreparedStatement ps = cnx.prepareStatement(GET_Formateur_BY_ID);
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        rs.next();//next return boolean
+        return mapResultsToFormateur(rs.getInt(1), rs.getString(2), rs.getString(3));
+    }
+
+    private Formateur mapResultsToFormateur(int id, String nom, String prenom) {
+        return new Formateur(id, nom, prenom);
+    }
 }
     

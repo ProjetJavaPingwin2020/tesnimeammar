@@ -16,7 +16,7 @@ public class ConnexionBase
 
     private static ConnexionBase instance;
 
-    private String url = "jdbc:mysql://localhost:3306/test1.1"; 
+    private String url = "jdbc:mysql://localhost:3306/pidev"; 
     private String login = "root";
     private String mdp = "";
     private Connection cnx;

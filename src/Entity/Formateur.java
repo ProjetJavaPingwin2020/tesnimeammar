@@ -6,23 +6,45 @@
 package Entity;
 
 import java.io.InputStream;
+import javafx.scene.image.ImageView;
 
 /**
  *
  * @author asus
  */
 public class Formateur {
-    int id;
-    String nom;
-    String prenom;
-  //  String img;
-    //String nomImage;
-     private InputStream image;
+   private int id;
+    private String nom;
+     private String prenom;
+
+     //private InputStream image;
+   private String nomImage;
+    // private ImageView photo;
 
     public Formateur() {
     }
 
-    public Formateur(String nom, String prenom, InputStream img) {
+    public Formateur(int id, String nom, String prenom, String nomImage) {
+        this.id = id;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.nomImage = nomImage;
+    }
+
+    public Formateur(String nom, String prenom, String nomImage) {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.nomImage = nomImage;
+    }
+
+    public Formateur(String nom, String prenom) {
+        this.nom = nom;
+        this.prenom = prenom;
+    }
+
+   
+
+  /*  public Formateur(String nom, String prenom, InputStream img) {
         this.nom = nom;
         this.prenom = prenom;
       //  this.img = img;
@@ -36,12 +58,28 @@ public class Formateur {
         this.prenom = prenom;
        // this.img = img;
         this.image = img;
+    }*/
+
+    public String getNomImage() {
+        return nomImage;
     }
 
-    public Formateur(String nom, String prenom) {
-        this.nom = nom;
-        this.prenom = prenom;
+    public void setNomImage(String nomImage) {
+        this.nomImage = nomImage;
     }
+
+ /*   public ImageView getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(ImageView photo) {
+        this.photo = photo;
+    }
+
+    
+*/
+    
+   
 
     
     public Formateur(String nom) {
@@ -70,14 +108,14 @@ public class Formateur {
         this.prenom = prenom;
     }
 
-    public InputStream getImage() {
+    /*public InputStream getImage() {
         return image;
     }
 
     public void setImage(InputStream image) {
         this.image = image;
     }
-
+*/
    
 
     public int getId() {
@@ -90,7 +128,7 @@ public class Formateur {
 
     @Override
     public String toString() {
-        return "Formateur { "+nom+" "+prenom+"  "+image+" }";
+        return "Formateur { "+nom+" "+prenom+"  "+nomImage+" }";
     }
     
     

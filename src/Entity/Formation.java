@@ -26,13 +26,13 @@ public class Formation {
    // private String nomImage;
     private int nbrplace;
     private int formateur;
-     private InputStream image;
+     private String image;
     
 
     public Formation() {
     }
 
-    public Formation(int id, String nom, String type, Date date, String lieu, String description, String heure, InputStream image, int nbrplace, int formateur) {
+    public Formation(int id, String nom, String type, Date date, String lieu, String description, String heure, String image, int nbrplace, int formateur) {
         this.id = id;
         this.nom = nom;
         this.type = type;
@@ -45,20 +45,8 @@ public class Formation {
         this.formateur = formateur;
     }
 
-    public Formation(int id, String nom, String type, Date date, String lieu, String description, String heure, int nbrplace, int formateur, InputStream image) {
+    public Formation(int id, String nom, String type, Date date, String lieu, String description, String heure, int nbrplace, int formateur, String image) {
         this.id = id;
-        this.nom = nom;
-        this.type = type;
-        this.date = date;
-        this.lieu = lieu;
-        this.description = description;
-        this.heure = heure;
-        this.nbrplace = nbrplace;
-        this.formateur = formateur;
-        this.image = image;
-    }
-
-    public Formation(String nom, String type, Date date, String lieu, String description, String heure, int nbrplace, int formateur, InputStream image) {
         this.nom = nom;
         this.type = type;
         this.date = date;
@@ -81,6 +69,30 @@ public class Formation {
         this.formateur = formateur;
     }
 
+    public Formation(String nom, String type, Date date, String lieu, String description, String heure, int nbrplace, int formateur, String image) {
+        this.nom = nom;
+        this.type = type;
+        this.date = date;
+        this.lieu = lieu;
+        this.description = description;
+        this.heure = heure;
+        this.nbrplace = nbrplace;
+        this.formateur = formateur;
+        this.image = image;
+    }
+
+    public Formation(String nom, String type, String lieu, String description, String heure, int nbrplace, int formateur) {
+        this.nom = nom;
+        this.type = type;
+        this.lieu = lieu;
+        this.description = description;
+        this.heure = heure;
+        this.nbrplace = nbrplace;
+        this.formateur = formateur;
+    }
+
+    
+
     
   
 
@@ -89,7 +101,7 @@ public class Formation {
     
     
 
-    public Formation(String nom, String type, Date date, String lieu, String description, String heure, InputStream image, int nbrplace, int formateur) {
+    public Formation(String nom, String type, Date date, String lieu, String description, String heure, String image, int nbrplace, int formateur) {
         this.nom = nom;
         this.type = type;
         this.date = date;
@@ -99,6 +111,14 @@ public class Formation {
         this.image = image;
         this.nbrplace = nbrplace;
         this.formateur = formateur;
+    }
+
+    public Formation(String nom, String type, String lieu, String description, String heure) {
+        this.nom = nom;
+        this.type = type;
+        this.lieu = lieu;
+        this.description = description;
+        this.heure = heure;
     }
 
     public Formation(int id, String nom, String type, Date date, String lieu, String description, String heure, int nbrplace, int formateur) {
@@ -113,6 +133,17 @@ public class Formation {
         this.nbrplace = nbrplace;
         this.formateur = formateur;
     }
+
+    public Formation(String nom) {
+        this.nom = nom;
+    }
+
+    public Formation(String nom, String type) {
+        this.nom = nom;
+        this.type = type;
+    }
+    
+    
 
     public Formation(int id, String nom, String type, Date date, String lieu, String description, String heure, int nbrplace) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -191,11 +222,11 @@ public class Formation {
         this.heure = heure;
     }
 
-    public InputStream getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(InputStream image) {
+    public void setImage(String image) {
         this.image = image;
     }
 

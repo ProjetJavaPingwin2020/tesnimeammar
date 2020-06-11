@@ -25,7 +25,7 @@ public class ReservationService {
      private Connection cnx;
     private Statement st;
     private PreparedStatement pre;
-    UserSevice us=new UserSevice();
+    UserService us=new UserService();
     
     private final String CREATE_RESERVATION = "INSERT INTO reservation(idformation,,etat,avis,idu) VALUES(?,?,?,?)";
     private final String GET_RESERVATION_BY_ID = "SELECT idr,idformation,etat,avis,idu FROM reservation WHERE idu=?";

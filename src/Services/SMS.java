@@ -16,11 +16,11 @@ import javax.swing.JOptionPane;
 public class SMS {
 
     public static void sendTrait(String mess) {
-        String api = "AHrJiTwGKJE-gRUs3NewDJ7bXWWGP0Lenou3v7FLVe";
+        String api = "ArYpKK3O3Dw-gSZwBWBwogrfqIEAqsPTUQPhC2xqnq";
         String send = "Tesnime Ammar";
         String num = "+21655913841";
         try {
-            String user = "username=" + "tenimeammar@gmail.com";
+            String user = "username=" + "souaddhoueibepammar@gmail.com";
             String apiKey = "&apiKey=" + api;
             String message = "&message=" + mess;
             String sender = "&sender=" + send;

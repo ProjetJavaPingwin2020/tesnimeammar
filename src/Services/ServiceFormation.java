@@ -5,16 +5,18 @@
  */
 package Services;
 
+import Entity.Commande;
+import Entity.Evenement;
 import Entity.Formateur;
 import Entity.Formation;
 import Entity.FosUser;
 import Entity.Reservation;
 import IServices.IService;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.Date;
@@ -44,6 +46,7 @@ public class ServiceFormation implements IService<Formation>{
     private PreparedStatement pre;
     private ResultSet res ;
     static String valeur_combo_type;
+     UserService us= new UserService();
     
     public ServiceFormation() {
                 cnx = ConnexionBase.getInstance().getCnx();
@@ -55,7 +58,7 @@ public class ServiceFormation implements IService<Formation>{
     public void ajouter(Formation f) throws SQLException {
 
 
-            String requeteInsert = "INSERT INTO `formation` (`nom`, `type`, `date`,`lieu`, `description`,`heure`,`nbrplace`,`formateur`,`image`) VALUES ( ?,?,?,?,?,?,?,?,?);";
+            String requeteInsert = "INSERT INTO `formation` (`nom`, `type`, `date`,`lieu`, `description`,`heure`,`nbrplace`,`formateur`,`nomImage`) VALUES ( ?,?,?,?,?,?,?,?,?);";
             Connection con = ConnexionBase.getInstance().getCnx();
             PreparedStatement pre = (PreparedStatement) con.prepareStatement(requeteInsert);
             pre.setString(1, f.getNom());
@@ -67,7 +70,7 @@ public class ServiceFormation implements IService<Formation>{
              
             pre.setInt(7, f.getNbrplace());
              pre.setInt(8, f.getFormateur());
-            pre.setBinaryStream(9, f.getImage());
+            pre.setString(9, f.getImage());
             //  pre.setString(9, f.getFormateur().getNom());
            
                 pre.executeUpdate();
@@ -118,7 +121,7 @@ public class ServiceFormation implements IService<Formation>{
              String lieu = rs.getString("lieu");
              String description = rs.getString("description");
              String heure = rs.getString("heure");
-            InputStream image = rs.getBinaryStream("image");
+            String image = rs.getString("nomImage");
              int nbrplace = rs.getInt(8);
              
            // String formateur = rs.getString(9);
@@ -129,40 +132,32 @@ public class ServiceFormation implements IService<Formation>{
         }
         return AL;
     }
-   public Image getFormationImageByID(int id) throws SQLException, FileNotFoundException, IOException {
-        PreparedStatement ps = cnx.prepareStatement("SELECT image FROM formation WHERE id = ?");
+  public String getFormationImageByID(int id) throws SQLException, FileNotFoundException, IOException {
+       String is ="";
+        PreparedStatement ps = cnx.prepareStatement("SELECT nomImage FROM formation WHERE id = ?");
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
-            InputStream is = rs.getBinaryStream("image");
-            OutputStream os = new FileOutputStream(new File("photo.jpg"));
-            byte[] content = new byte[1024];
-            int size = 0;
-            while ((size = is.read(content)) != -1) {
-                os.write(content, 0, size);
-            }
-            os.close();
-            is.close();
-
-        }
-        Image image = new Image("file:photo.jpg");
-        return image;
-    
-    
-    
+        is = rs.getString("nomImage");
+}
+        
+        return is;
      }
 
+  
     private final String GET_All_Formation = "select id,nom,type,date,lieu,description,heure,nbrplace,formateur from formation ";
      
      public ObservableList<Formation> getAllFormations() throws SQLException {
         ObservableList<Formation> data = FXCollections.observableArrayList();
         PreparedStatement ps = cnx.prepareStatement(GET_All_Formation);
-        UserSevice usrs = new UserSevice();
-        ServiceFormation sf = new ServiceFormation();
+        UserService us = new UserService();
+        ServiceFormateur sf = new ServiceFormateur();
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
-            FosUser u = new FosUser();
+            Formateur formateur = new Formateur();
             Formation f = new Formation();
+            formateur=sf.getFormateurById(rs.getInt(9)); 
+         
             
            // //u=usrs.getUserByid
             data.add(ResultsToFormation(rs.getInt(1),rs.getString(2), rs.getString(3), rs.getDate(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getInt(8),rs.getInt(9)));
@@ -175,7 +170,7 @@ public class ServiceFormation implements IService<Formation>{
      public ObservableList<Formation> getAllFormationsbytype() throws SQLException {
         ObservableList<Formation> data = FXCollections.observableArrayList();
         PreparedStatement ps = cnx.prepareStatement(GET_All_Formationbytype);
-        UserSevice usrs = new UserSevice();
+        UserService usrs = new UserService();
         ServiceFormation sf = new ServiceFormation();
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
@@ -194,13 +189,7 @@ public class ServiceFormation implements IService<Formation>{
      private Formation ResultsToFormation(int id,String nom, String type,Date date,String lieu,String description,String heure,int nbrplace,int formateur) {
        return new Formation(id , nom, type,date,lieu,description,heure,nbrplace,formateur);
     } 
-    /*@Override
-    public void delete(int id) throws SQLException {
-       PreparedStatement PS = cnx.prepareStatement("DELETE FROM `test1.1`.`formation` WHERE `id`=?");
-        PS.setInt(1,id);
-        PS.executeUpdate();
-    }
-*/
+
      public static int delete(String nom) {
         int st = 0; //st mtaa l aada hahaha
         try {
@@ -215,7 +204,7 @@ public class ServiceFormation implements IService<Formation>{
         return st;
     }
       public void updatetab(Formation f) throws SQLException {
-        PreparedStatement PS=cnx.prepareStatement("UPDATE `test1.1`.`formation` SET `nom`=? ,`type`=? ,`date`=?,`lieu`=?,`description`=? ,`heure`=? ,`nbrplace`=? ,`formateur`=? WHERE `id`=?");
+        PreparedStatement PS=cnx.prepareStatement("UPDATE `pidev`.`formation` SET `nom`=? ,`type`=? ,`date`=?,`lieu`=?,`description`=? ,`heure`=? ,`nbrplace`=? ,`formateur`=?,`nomImage`=? WHERE `id`=?");
         PS.setString(1,f.getNom());
         PS.setString(2, f.getType());
         PS.setDate(3,f.getDate());
@@ -224,28 +213,22 @@ public class ServiceFormation implements IService<Formation>{
           PS.setString(6,f.getHeure());
           PS.setInt(7,f.getNbrplace());
           PS.setInt(8,f.getFormateur());
-        
+          PS.setString(9, f.getImage());       
         PS.executeUpdate();
     }
 
 
    public ObservableList<ImageView> getAllFormationsImages() throws SQLException, FileNotFoundException, IOException {
+       String is ="";
         ObservableList<ImageView> img = FXCollections.observableArrayList();
-        PreparedStatement ps = cnx.prepareStatement("SELECT image FROM formation");
+        PreparedStatement ps = cnx.prepareStatement("SELECT nomImage FROM formation");
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
-            InputStream is = rs.getBinaryStream("image");
-            OutputStream os = new FileOutputStream(new File("photo.jpg"));
-            byte[] content = new byte[1024];
-            int size = 0;
-            while ((size = is.read(content)) != -1) {
-                os.write(content, 0, size);
-            }
-            os.close();
-            is.close();
-            Image image = new Image("file:photo.jpg");
-            ImageView iv = new ImageView(image);
-            img.add(iv);
+             is = rs.getString("nomImage");
+              Image image = new Image(new FileInputStream("C:\\wamp64\\www\\integration\\test1.1\\web\\imageFormations\\"+is));
+               ImageView imgEvt = new ImageView(image);
+            img.add(imgEvt);
+  
         }
         return img;
     }
@@ -256,23 +239,25 @@ public class ServiceFormation implements IService<Formation>{
         ps.executeUpdate();
         System.out.println("Reservation deleted");
     }
-    private final String GET_Formation_By_ID = "select id, nom, type, date, lieu, description,heure,nbrplace,formateur,image  from  formation where id=?";
+    private final String GET_Formation_By_ID = "select id, nom, type, date, lieu, description,heure,nbrplace,formateur,nomImage  from  formation where id=?";
     public Formation getFormationById() throws SQLException {
         PreparedStatement ps = cnx.prepareStatement(GET_Formation_By_ID);
+   //     ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
         rs.next();//next return boolean
-        return ResultsToFormation(rs.getInt(1),rs.getString(2), rs.getString(3), rs.getDate(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getInt(8),rs.getInt(9));
+        return ResultsToFormation(rs.getInt(1),rs.getString(2), rs.getString(3), rs.getDate(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getInt(8),rs.getInt(9),rs.getString(10));
     }
 
     @Override
    public void update(Formation f,int id) throws SQLException {
-        PreparedStatement PS=cnx.prepareStatement("UPDATE `test1.1`.`formation` SET `nom`=?,`type`=? ,`date`=?,`lieu`=?,`description`=? ,`heure`=? ,`nbrplace`=? ,`formateur`=? WHERE `id`=?");
+        PreparedStatement PS=cnx.prepareStatement("UPDATE `pidev`.`formation` SET `nom`=?,`type`=? ,`date`=?,`lieu`=?,`description`=? ,`heure`=? ,`nbrplace`=? ,`formateur`=? ,`nomImage`=? WHERE `id`=?");
         PS.setString(1,f.getNom());
         PS.setString(2,f.getType());
         PS.setDate(3,f.getDate());
         PS.setString(4,f.getLieu());
         PS.setString(5,f.getDescription());
-        PS.setInt(5,id);
+        PS.setInt(6,id);
+        PS.setString(7,f.getImage());
         PS.executeUpdate();
     }
    
@@ -284,13 +269,15 @@ public class ServiceFormation implements IService<Formation>{
             st = cnx.createStatement();
             res=st.executeQuery(requete);
             if (res.next())
-            {a=new Formation(res.getInt(1),res.getString(2), res.getString(3), res.getDate(4),res.getString(5),res.getString(6),res.getString(7),res.getInt(8),res.getInt(9));}
+            {a=new Formation(res.getInt(1),res.getString(2), res.getString(3), res.getDate(4),res.getString(5),res.getString(6),res.getString(7),res.getInt(8),res.getInt(9),res.getString(10));}
         } catch (SQLException ex) {
             Logger.getLogger(ServiceFormation.class.getName()).log(Level.SEVERE, null, ex);
         }
         return a ;
         
+       
     }
+   
      public int getidFormationByName(String s) throws SQLException {
        //PreparedStatement ps = cnx.prepareStatement("SELECT id FROM formation WHERE nom='"+s+"'");
        // ps.setString(1, s);
@@ -300,13 +287,18 @@ public class ServiceFormation implements IService<Formation>{
         rs.next();//next return boolean
         return rs.getInt(1);
     }
+     
+     
+     
       public void addReservation(int idf, int iduser) throws SQLException {
+          
           Reservation r = null;
-        PreparedStatement ps = cnx.prepareStatement("INSERT INTO reservation(idformation,etat,avis,idu,nbrres) VALUES(?,?,?,?,0)");
-        ps.setInt(1, idf);
-        ps.setString(2, "Interessé !");
-        ps.setString(3, "Pas encore !");
-        ps.setInt(4, iduser);
+        PreparedStatement ps = cnx.prepareStatement("INSERT INTO reservation(idu,idformation,etat,avis) VALUES(?,?,?,?)");
+        ps.setInt(1, iduser);
+        ps.setInt(2, idf);
+        ps.setString(3, "Interessé !");
+        ps.setString(4, "Pas encore !");
+      
     
       //  ps.setString(3, "En cours !");
 
@@ -347,7 +339,19 @@ public class ServiceFormation implements IService<Formation>{
         return q;
     }
 
+  public ObservableList<Formation> RechercheAvanceeFormation(String s) throws SQLException {
+        ObservableList<Formation> e = FXCollections.observableArrayList();
+        PreparedStatement ps = cnx.prepareStatement("select id, nom, type, date, lieu, description, heure,nbrplace,formateur  FROM formation where nom LIKE ?");
+                 
+        ps.setString(1, "%" + s + "%");
+        ResultSet rs = ps.executeQuery();
 
+        while (rs.next()) {
+            e.add(ResultsToFormation(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDate(4), rs.getString(5), rs.getString(6), rs.getString(7),rs.getInt(8),rs.getInt(9)));
+        }
+
+        return e;
+    }
      public void decrementnbr(int id) {
         int q = getNbrPlace(id);
         q--;
@@ -404,69 +408,58 @@ public class ServiceFormation implements IService<Formation>{
       private Formation ResultsToFormation2(String nom, String type,Date date,String lieu,String description,String heure,int nbrplace) {
        return new Formation(nom, type,date,lieu,description,heure,nbrplace);
     } 
-      public ObservableList<ImageView> getAllReservationsImages() throws SQLException, FileNotFoundException, IOException {
-        ObservableList<ImageView> img = FXCollections.observableArrayList();
-        PreparedStatement ps = cnx.prepareStatement("SELECT f.image FROM formation f,reservation r where f.id=r.idformation and r.idu=?");
-         
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            InputStream is = rs.getBinaryStream("image");
-            OutputStream os = new FileOutputStream(new File("photo.jpg"));
-            byte[] content = new byte[1024];
-            int size = 0;
-            while ((size = is.read(content)) != -1) {
-                os.write(content, 0, size);
-            }
-            os.close();
-            is.close();
-            Image image = new Image("file:photo.jpg");
-            ImageView iv = new ImageView(image);
-            img.add(iv);
-        }
-        return img;
-    }
-      
-   /*   private final String GET_All_Formationbytype = "SELECT nom,type,date,lieu,description,heure,nbrplace FROM `formation` WHERE type=" + "'" + valeur_combo_type+ "'";
-     
-     public ObservableList<Formation> getAllFormationsbytype() throws SQLException {
-        ObservableList<Formation> data = FXCollections.observableArrayList();
-        PreparedStatement ps = cnx.prepareStatement(GET_All_Formationbytype);
-        UserSevice usrs = new UserSevice();
-        ServiceFormation sf = new ServiceFormation();
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            FosUser u = new FosUser();
-            Formation f = new Formation();
-            
-           // //u=usrs.getUserByid
-            data.add(ResultsToFormation1(rs.getString(1), rs.getString(2), rs.getDate(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getInt(7)));
-        }
 
-        return data;
-    } 
-        private Formation ResultsToFormation1(String nom, String type,Date date,String lieu,String description,String heure,int nbrplace) {
-       return new Formation(nom, type,date,lieu,description,heure,nbrplace);
-    } 
-        */
+      public String GetNomFormation(int idd) throws SQLException {
+           ResultSet rs;       
+        st=cnx.createStatement();
+        String name = null;
         
-         /*private final String GET_my_reservation = (" SELECT f FROM formation f JOIN rservation r WITH r.idformation = f.id WHERE r.idu=? ");
-     
-     public ObservableList<Formation> getmyreservation() throws SQLException {
-        ObservableList<Formation> data = FXCollections.observableArrayList();
-        PreparedStatement ps = cnx.prepareStatement(GET_my_reservation);
-        UserSevice usrs = new UserSevice();
-        ServiceFormation sf = new ServiceFormation();
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            FosUser u = new FosUser();
-            Formation f = new Formation();
+        String req="SELECT * FROM `formation` ";
+        rs=st.executeQuery(req);
+         while (rs.next()) {
+         if( rs.getInt("id") ==idd)
+             
+         name= rs.getString("nom");
+        } 
+         return name;
+            }
+   
+      public Reservation getresbyid(int idd) {
+
+        
+    Reservation r = new Reservation();
+        try {
+
+            String req = "SELECT *  FROM reservation";
+
+            st = cnx.createStatement();
+            ResultSet res = st.executeQuery(req);
+
+            while (res.next()) {
+                if (Integer.parseInt(res.getString("idr"))==idd)
+                {
+               
+                r.setIdr(Integer.parseInt(res.getString("idr")));
+                r.setIdformation(Integer.parseInt(res.getString("idformation")));
+               r.setIdu(Integer.parseInt(res.getString("idu")));
+               
+              r.setUsername(us.getusername(r.getIdu()));
+               r.setNomformation(GetNomFormation(r.getIdformation()));
+              
+                
+
+                return r;
+            }
+            }
             
-           // //u=usrs.getUserByid
-            data.add(ResultsToFormation(rs.getInt(1),rs.getString(2), rs.getString(3), rs.getDate(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getInt(8),rs.getInt(9)));
+            
+
+        } catch (SQLException ex) {
+            System.out.println(ex);
         }
 
-        return data;
-    } */
+        return r;
+    }
       private final String DELETE_RESERVATION_BY_ID = "DELETE FROM reservation WHERE idformation=? AND idu=?";
       public void deleteReservationById(int iduser,int idf) throws SQLException{
        PreparedStatement ps = cnx.prepareStatement(DELETE_RESERVATION_BY_ID);
@@ -490,7 +483,25 @@ public class ServiceFormation implements IService<Formation>{
           public Reservation mapResultsToReservation(int idr,int idformation,String etat,String avis, int idu) {
          return new Reservation(idr,idformation,etat,avis,idu);
     }
-         public Formation findbyid(int id) {
+          
+          
+         private final String detailform=" select f.nom ,f.type,f.heure,f.description from formation f , reservation r where f.id=r.idformation and idu=?";
+          public ObservableList<Formation> Detail(int iduser) throws SQLException {
+        ObservableList<Formation> a = FXCollections.observableArrayList();
+        PreparedStatement ps = cnx.prepareStatement(detailform);
+        ps.setInt(1, iduser);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+           // a.add(mapResultsToDetail(rs.getString(1), rs.getString(2),rs.getString(3),rs.getString(4)));
+        }
+
+        return a;
+    }
+            public Reservation mapResultsToDetail(String nom,String type, String heure,String description) {
+         return new Reservation(nom,type,heure,description);
+    }
+          
+ public Formation findbyid(int id) {
         Formation u = new Formation();
         try {
 
@@ -518,6 +529,10 @@ public class ServiceFormation implements IService<Formation>{
             ex.getMessage();
         }
               return u;
+    }
+
+    private Formation ResultsToFormation(int aInt, String string, String string0, Date date, String string1, String string2, String string3, int aInt0, int aInt1, String string4) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
           
 

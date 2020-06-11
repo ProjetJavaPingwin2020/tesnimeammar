@@ -16,7 +16,7 @@ public class Login {
     static String username;
     static String mail;
     static String nomformation;
-    
+    static String nom_event;
 
     public Login() {
     }
@@ -73,6 +73,14 @@ public class Login {
 
     public static void setNomformation(String nomformation) {
         Login.nomformation = nomformation;
+    }
+
+    public static String getNom_event() {
+        return nom_event;
+    }
+
+    public static void setNom_event(String nom_event) {
+        Login.nom_event = nom_event;
     }
 
 }
